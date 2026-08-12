@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: namegen
+  labels:
+    app: namegen
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: namegen
+  template:
+    metadata:
+      labels:
+        app: namegen
+    spec:
+      containers:
+      - name: namegen
+        image: 929394210222.dkr.ecr.il-central-1.amazonaws.com/project-app:latest
+        ports:
+        - containerPort: 8080 # Replace with your app port
+        env:
+        - name: my-db-secret
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: MONGODB_URL
+              
