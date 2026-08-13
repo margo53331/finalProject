@@ -1,28 +1,95 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Namespace
 metadata:
   name: namegen
   labels:
+    name: namegen
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: namegen-config
+  namespace: namegen
+data:
+  NODE_ENV: "production"
+  PORT: "8080"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: namegen-secrets
+  namespace: namegen
+type: Opaque
+stringData:
+  mongodb-uri: "mongodb://mongo:27017/namegen"
+  mongodb-root-password: "changeme"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: namegen-app
+  namespace: namegen
+  labels:
     app: namegen
+    tier: application
 spec:
-  replicas: 2
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: namegen
+      tier: application
   template:
     metadata:
       labels:
         app: namegen
+        tier: application
     spec:
+      serviceAccountName: namegen
       containers:
       - name: namegen
-        image: 929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:12b3c8158f44a1d2193de944724c7adce39901d1
+        image:  929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:12b3c8158f44a1d2193de944724c7adce39901d1
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8080 
+        - containerPort: 8080
+          name: http
+          protocol: TCP
         env:
-        - name: my-db-secret
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+          secretKeyRef:
+            name: mongodb-secret
+            key: mongo-root-username
+        - name: MONGO_INITDB_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-credentials
-              key: MONGODB_URL
-              
+             name: mongodb-secret
+             key: mongo-root-password
+
+
+   ___     
+apiVersion: v1
+kind: Service
+metadata:
+  name: namegen-service
+  namespace: namegen
+  labels:
+    app: namegen
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+  spec:
+    type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: namegen
+    tier: application
+---
