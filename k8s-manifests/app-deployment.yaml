@@ -70,6 +70,11 @@ spec:
             secretKeyRef:
               name: mongodb-secret
               key: mongo-root-password
+        - name: SOME_THIRD_VAR
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: some-key
 ---
 apiVersion: v1
 kind: Service
