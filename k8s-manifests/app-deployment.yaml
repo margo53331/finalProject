@@ -1,29 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: namegen
-  labels:
-    name: namegen
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: namegen-config
-  namespace: namegen
-data:
-  NODE_ENV: "production"
-  PORT: "8080"
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: namegen-secrets
-  namespace: namegen
-type: Opaque
-stringData:
-  mongodb-uri: "mongodb://mongo:27017/namegen"
-  mongodb-root-password: "changeme"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,8 +23,8 @@ spec:
         app: namegen
         tier: application
     spec:
-      # Remove or ensure a ServiceAccount named 'namegen' exists:
-      serviceAccountName: namegen
+      # Uncomment the next line only if you explicitly created a ServiceAccount named 'namegen'
+      # serviceAccountName: namegen
       containers:
       - name: namegen
         image: 929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:12b3c8158f44a1d2193de944724c7adce39901d1
@@ -70,29 +44,10 @@ spec:
             secretKeyRef:
               name: mongodb-secret
               key: mongo-root-password
-        - name: SOME_THIRD_VAR
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: some-key
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: namegen-service
-  namespace: namegen
-  labels:
-    app: namegen
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: "external"
-    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 8080
-    protocol: TCP
-    name: http
-  selector:
-    app: namegen
-    tier: application
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
