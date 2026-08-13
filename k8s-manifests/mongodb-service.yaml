@@ -1,4 +1,4 @@
-# Headless Service required for StatefulSet network identity
+
 apiVersion: v1
 kind: Service
 metadata:

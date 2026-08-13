@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
       - name: namegen
-        image: 929394210222.dkr.ecr.il-central-1.amazonaws.com/project-app:latest
+        image: 929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:12b3c8158f44a1d2193de944724c7adce39901d1
         ports:
-        - containerPort: 8080 # Replace with your app port
+        - containerPort: 8080 
         env:
         - name: my-db-secret
           valueFrom:
