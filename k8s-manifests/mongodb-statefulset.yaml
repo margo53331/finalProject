@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb
+  namespace: namegen
 spec:
   serviceName: "mongodb"
   replicas: 1
@@ -15,35 +16,18 @@ spec:
     spec:
       containers:
       - name: mongodb
-        image: mongo:3.6
+        image: mongo:latest
         ports:
         - containerPort: 27017
-          name: mongodb
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
-          secretKeyRef:
-            name: my-db-secret
-            key: username
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-username
         - name: MONGO_INITDB_ROOT_PASSWORD
           valueFrom:
-          secretKeyRef:
-            name: my-db-secret
-            key: password
-        - name: MONGO_INITDB_DATABASE
-          valueFrom:
-          secretKeyRef:
-            name: my-db-secret
-            key: project
-        volumeMounts:
-        - name: mongodb-data
-          mountPath: /data/db
-  volumeClaimTemplates:
-  - metadata:
-      name: mongodb-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "gp3"
-      resources:
-        requests:
-          storage: 20Gi
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-password
+        # Make sure ALL 3 env variables in this file use valueFrom!
