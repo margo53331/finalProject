@@ -49,10 +49,11 @@ spec:
         app: namegen
         tier: application
     spec:
+      # Remove or ensure a ServiceAccount named 'namegen' exists:
       serviceAccountName: namegen
       containers:
       - name: namegen
-        image:  929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:12b3c8158f44a1d2193de944724c7adce39901d1
+        image: 929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:12b3c8158f44a1d2193de944724c7adce39901d1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
@@ -61,17 +62,15 @@ spec:
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
-          secretKeyRef:
-            name: mongodb-secret
-            key: mongo-root-username
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-username
         - name: MONGO_INITDB_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-             name: mongodb-secret
-             key: mongo-root-password
-
-
-   ___     
+              name: mongodb-secret
+              key: mongo-root-password
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -82,8 +81,8 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "external"
     service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
-  spec:
-    type: LoadBalancer
+spec:
+  type: LoadBalancer
   ports:
   - port: 80
     targetPort: 8080
@@ -92,4 +91,3 @@ metadata:
   selector:
     app: namegen
     tier: application
----
