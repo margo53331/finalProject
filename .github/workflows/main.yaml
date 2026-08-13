@@ -41,9 +41,9 @@ jobs:
 
             - name: EKS deployment
               run: |
-                kubectl apply -f ./k8s/01-storageclass.yaml
-                kubectl apply -f ./k8s/03-mongodb-statefulset.yaml
-                kubectl apply -f ./k8s/04-app-deployment.yaml
+                kubectl apply -f ./k8s/storageclass.yaml
+                kubectl apply -f ./k8s/mongodb-statefulset.yaml
+                kubectl apply -f ./k8s/app-deployment.yaml
                
                 
 
