@@ -30,4 +30,4 @@ spec:
             secretKeyRef:
               name: mongodb-secret
               key: mongo-root-password
-        # Make sure ALL 3 env variables in this file use valueFrom!
+        
