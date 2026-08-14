@@ -44,10 +44,9 @@ jobs:
                 kubectl apply -f ./k8s-manifests/app-deployment.yaml
                 kubectl apply -f ./k8s-manifests/storageclass.yaml
                 kubectl apply -f ./k8s-manifests/mongodb-statefulset.yaml
-                kubectl set image deployment/namegen-app namegen=929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:$IMAGE_TAG -n namegen
-                kubectl rollout status statefulset/mongodb -n namegen
-                kubectl get services namegen-service
-               
+                kubectl set image deployment/namegen-app namegen=929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:$IMAGE_TAG -n namegen-cluster
+                kubectl rollout status statefulset/mongodb -n namegen-cluster
+                
                 
 
 
