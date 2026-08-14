@@ -46,6 +46,22 @@ jobs:
                 kubectl apply -f ./k8s-manifests/mongodb-statefulset.yaml
                 kubectl set image deployment/namegen-app namegen=929394210222.dkr.ecr.il-central-1.amazonaws.com/myapps/namegen:$IMAGE_TAG -n namegen
                 kubectl rollout status deployment/namegen-app -n namegen
+
+
+            - name: EKS deployment
+              run: |
+               kubectl apply -f ./k8s-manifests/app-deployment.yaml
+               kubectl rollout status deployment/namegen-app -n namegen --timeout=90s
+
+            - name: Print Pod Diagnostics on Failure
+              if: failure() # Runs automatically if the deployment times out or fails
+              run: |
+                echo "================ POD STATUS ================"
+                kubectl get pods -n namegen
+                echo "================ POD DETAILS ================"
+                kubectl describe pods -l app=namegen -n namegen
+                echo "================ CONTAINER LOGS ================"
+                kubectl logs -l app=namegen -n namegen --tail=100
                 
                 
 
