@@ -17,12 +17,13 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: namegen-secrets
+  name: mongodb-secret
   namespace: namegen
 type: Opaque
 stringData:
+  mongo-root-username: "root"
+  mongo-root-password: "changeme"
   mongodb-uri: "mongodb://mongo:27017/namegen"
-  mongodb-root-password: "changeme"
 ---
 apiVersion: apps/v1
 kind: Deployment
