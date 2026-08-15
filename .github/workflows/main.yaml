@@ -61,4 +61,4 @@ jobs:
           echo "================ POD DETAILS ================"
           kubectl describe pods -n namegen
           echo "================ CONTAINER LOGS ================"
-          kubectl logs -n namegen --all-containers=true --tail=100
+          kubectl logs -l app=namegen -n namegen --tail=100 --all-containers=true
