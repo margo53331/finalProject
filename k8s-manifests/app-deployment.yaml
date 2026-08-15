@@ -80,7 +80,7 @@ spec:
               name: mongodb-secret
               key: mongo-root-password
         - name: MONGODB_URL
-          value: "mongodb://$(MONGO_INITDB_ROOT_USERNAME):$(MONGO_INITDB_ROOT_PASSWORD)@mongodb-service.namegen.svc.cluster.local:27017"
+          value: "mongodb://$(MONGO_INITDB_ROOT_USERNAME):$(MONGO_INITDB_ROOT_PASSWORD)@10.100.42.19:27017"
         resources:
           requests:
             memory: "128Mi"
