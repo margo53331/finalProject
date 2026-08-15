@@ -23,7 +23,7 @@ type: Opaque
 stringData:
   mongo-root-username: "root"
   mongo-root-password: "changeme"
-  mongodb-uri: "mongodb://root:changeme@mongodb-service:27017/namegen"
+  mongodb-uri: "mongodb://root:changeme@mongodb-service.namegen.svc.cluster.local:27017/namegen"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -80,7 +80,7 @@ spec:
               name: mongodb-secret
               key: mongo-root-password
         - name: MONGODB_URL
-          value: "mongodb://$(MONGO_INITDB_ROOT_USERNAME):$(MONGO_INITDB_ROOT_PASSWORD)@mongodb-service:27017"
+          value: "mongodb://$(MONGO_INITDB_ROOT_USERNAME):$(MONGO_INITDB_ROOT_PASSWORD)@mongodb-service.namegen.svc.cluster.local:27017"
         resources:
           requests:
             memory: "128Mi"
