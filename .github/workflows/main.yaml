@@ -51,7 +51,7 @@ jobs:
           kubectl apply -f ./k8s-manifests/mongodb-statefulset.yaml
           kubectl apply -f ./k8s-manifests/app-deployment.yaml
           kubectl set image deployment/namegen-app namegen=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -n namegen
-          kubectl rollout status deployment/namegen-app -n namegen --timeout=120s
+          kubectl rollout status deployment/namegen-app -n namegen --timeout=500s
 
       - name: Print Pod Diagnostics on Failure
         if: failure()
